@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
 // MARK: - PROPERTIES
     let symbols = ["gfx-bell","gfx-cherry","gfx-coin","gfx-grape","gfx-seven","gfx-strawberry"]
-    @State private var highscore:Int = 0
+    @State private var highscore:Int = UserDefaults.standard.integer(forKey: "HighScore")
     @State private var coins : Int = 100
     @State private var betAmount:Int = 10
     @State private var reels:Array=[0,1,2]
@@ -48,6 +48,7 @@ struct ContentView: View {
     }
     func newHighScore(){
         highscore = coins
+        UserDefaults.standard.set(highscore,forKey: "HighScore")
     }
     func playerLoses(){
         coins -= betAmount
@@ -70,6 +71,12 @@ struct ContentView: View {
             showingModal = true
             
         }
+    }
+    func resetGame(){
+        UserDefaults.standard.set(0,forKey: "HighScore")
+        highscore = 0
+        coins = 100
+        activateBet10()
     }
 // MARK: - BODY
     var body: some View {
@@ -194,7 +201,7 @@ struct ContentView: View {
             .overlay(
                 // RESET
                 Button(action:{
-                    print("Reset the game")
+                    resetGame()
                 }){
                     Image(systemName: "arrow.2.circlepath.circle")
                 }
